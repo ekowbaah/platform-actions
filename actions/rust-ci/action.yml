@@ -7,7 +7,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: dtolnay/rust-toolchain@stable
+    - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable 2026-10-15
       with:
         toolchain: ${{ inputs.toolchain }}
         components: rustfmt, clippy
@@ -17,3 +17,5 @@ runs:
       run: cargo clippy --all-targets -- -D warnings
     - shell: bash
       run: cargo test --all-targets
+    - shell: bash
+      run: cargo doc --no-deps

@@ -1,0 +1,23 @@
+name: Generate SBOM
+description: Produce a dependency inventory using tools already present on the runner
+inputs:
+  ecosystem:
+    description: npm or cargo
+    required: true
+  output:
+    description: Output path
+    default: sbom.json
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        ECOSYSTEM: ${{ inputs.ecosystem }}
+        OUTPUT: ${{ inputs.output }}
+      run: |
+        set -euo pipefail
+        case "$ECOSYSTEM" in
+          npm) npm ls --all --json > "$OUTPUT" ;;
+          cargo) cargo metadata --locked --format-version 1 > "$OUTPUT" ;;
+          *) echo "unsupported ecosystem: $ECOSYSTEM" >&2; exit 2 ;;
+        esac
