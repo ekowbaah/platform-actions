@@ -1,0 +1,19 @@
+name: Secure Rust CI
+description: Format, lint, test, and audit a Rust repository
+inputs:
+  toolchain:
+    description: Rust toolchain
+    default: stable
+runs:
+  using: composite
+  steps:
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ inputs.toolchain }}
+        components: rustfmt, clippy
+    - shell: bash
+      run: cargo fmt --check
+    - shell: bash
+      run: cargo clippy --all-targets -- -D warnings
+    - shell: bash
+      run: cargo test --all-targets
